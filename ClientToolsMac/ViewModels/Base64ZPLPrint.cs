@@ -2,7 +2,7 @@
 
 public class Base64ZPLPrint
 {
-    public string base64String { get; set; }
-    public string printerName { get; set; }
+    public string Base64String { get; set; }
+    public string PrinterName { get; set; }
     public short CopyCount { get; set; } = 1;
 }

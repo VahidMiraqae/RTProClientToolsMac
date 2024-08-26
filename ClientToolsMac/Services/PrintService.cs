@@ -1,5 +1,4 @@
-
-using ClientToolsMac.Utilities;
+using ClientToolsMac.MacPrint;
 using RTProClientToolsMac.ViewModels;
 
 namespace RTProClientToolsMac.Controllers;
@@ -10,25 +9,35 @@ public class PrintService(
 {
     public async Task PrintAsync(Base64Print model)
     {
-        var base64String = model.base64String.Split(',')[1];
-        var filePath = await CreateFile(base64String, model.printFileName, model.folderName);
+        string filePath = await CreateFile(model);
 
-        var command = new MacPrintCommand().Filename(filePath)
-            .Printer(model.printerName)
+        var command = new MacPrintCommand()
+            .Filename(filePath)
+            .Printer(model.PrinterName)
             .Copies(model.CopyCount)
-            .MediaSource(model.paperSource);
+            .MediaSource(model.PaperSource);
         Console.WriteLine(command.ToString());
         await command.ExecuteAsync();
     }
 
-    private async Task<string> CreateFile(string base64String, string printFileName, string folderName = "")
+    public async Task PrintAsync(TextPrint model)
     {
-        var tempExportPath = string.IsNullOrEmpty(folderName)
-            ? Path.Combine(configurations.TempDirectory, folderName, printFileName)
-            : Path.Combine(configurations.TempDirectory, printFileName);
+        throw new NotImplementedException();
+    }
+
+    public string[] GetPrinters()
+    {
+        return MacPrintCommand.GetPrinters();
+    }
+
+    private async Task<string> CreateFile(Base64Print model)
+    {
+        var base64String = model.Base64String.Split(',')[1];
+        var tempExportPath = string.IsNullOrEmpty(model.FolderName)
+            ? Path.Combine(configurations.TempDirectory, model.FolderName, model.PrintFileName)
+            : Path.Combine(configurations.TempDirectory, model.PrintFileName);
         var bytes = Convert.FromBase64String(base64String);
         await File.WriteAllBytesAsync(tempExportPath, bytes);
         return tempExportPath;
     }
-
 }

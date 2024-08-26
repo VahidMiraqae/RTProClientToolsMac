@@ -2,12 +2,12 @@
 
 public class Base64Print
 {
-    public string base64String { get; set; }
-    public string? printerName { get; set; }
-    public string? printFileName { get; set; }
-    public string? documentName { get; set; }
-    public string? folderName { get; set; }
-    public string? paperSource { get; set; }
+    public string Base64String { get; set; }
+    public string? PrinterName { get; set; }
+    public string? PrintFileName { get; set; }
+    public string? DocumentName { get; set; }
+    public string? FolderName { get; set; }
+    public string? PaperSource { get; set; }
     public short CopyCount { get; set; } = 1;
 }
 

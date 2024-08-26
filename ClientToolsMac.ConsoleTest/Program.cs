@@ -33,13 +33,13 @@ internal class Program
         var base64 = Convert.ToBase64String(bytes);
         var base64Print = new Base64Print()
         {
-            base64String = $",{base64}",
+            Base64String = $",{base64}",
             CopyCount = 1,
-            documentName = "",
-            folderName = "",
-            paperSource = "",
-            printerName = "Some_Printer_Name",
-            printFileName = Path.GetFileName(filePath),
+            DocumentName = "",
+            FolderName = "",
+            PaperSource = "",
+            PrinterName = "Some_Printer_Name",
+            PrintFileName = Path.GetFileName(filePath),
         };
         await PrintService.PrintAsync(base64Print);
     }
