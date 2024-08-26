@@ -1,0 +1,6 @@
+@ClientToolsMac_HostAddress = http://localhost:5262
+
+GET {{ClientToolsMac_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientToolsMac", "ClientToolsMac\ClientToolsMac.csproj", "{B433E4DB-B21B-422F-915A-F09FCA28FE7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientToolsMac.ConsoleTest", "ClientToolsMac.ConsoleTest\ClientToolsMac.ConsoleTest.csproj", "{A0E241E3-7D69-4542-85BB-5A85A3D6639B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B433E4DB-B21B-422F-915A-F09FCA28FE7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B433E4DB-B21B-422F-915A-F09FCA28FE7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B433E4DB-B21B-422F-915A-F09FCA28FE7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B433E4DB-B21B-422F-915A-F09FCA28FE7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E241E3-7D69-4542-85BB-5A85A3D6639B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0E241E3-7D69-4542-85BB-5A85A3D6639B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0E241E3-7D69-4542-85BB-5A85A3D6639B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0E241E3-7D69-4542-85BB-5A85A3D6639B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {781BC0EB-68CE-4872-8CDF-23931282DBDB}
+	EndGlobalSection
+EndGlobal
