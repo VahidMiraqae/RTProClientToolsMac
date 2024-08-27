@@ -22,8 +22,24 @@ internal class Program
         //await PrintFile("sample.png");
         //await PrintFile("sample.rtf");
         //await PrintFile("sample.xlsx");
+        await PrintText("this is a sample text to print.");
 
         Console.ReadLine();
+    }
+
+    private static async Task PrintText(string v)
+    {
+        var base64Print = new TextPrint()
+        {
+            Text = v,
+            CopyCount = 1,
+            DocumentName = "",
+            FolderName = "",
+            PaperSource = "",
+            PrinterName = "Some_Printer_Name",
+            PrintFileName = Guid.NewGuid().ToString("N"),
+        };
+        await PrintService.PrintAsync(base64Print);
     }
 
     static async Task PrintFile(string filename)

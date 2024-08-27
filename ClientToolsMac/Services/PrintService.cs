@@ -22,7 +22,15 @@ public class PrintService(
 
     public async Task PrintAsync(TextPrint model)
     {
-        throw new NotImplementedException();
+        string filePath = await CreateFile(model);
+
+        var command = new MacPrintCommand()
+            .Filename(filePath)
+            .Printer(model.PrinterName)
+            .Copies(model.CopyCount)
+            .MediaSource(model.PaperSource);
+        Console.WriteLine(command.ToString());
+        await command.ExecuteAsync();
     }
 
     public string[] GetPrinters()
@@ -33,11 +41,23 @@ public class PrintService(
     private async Task<string> CreateFile(Base64Print model)
     {
         var base64String = model.Base64String.Split(',')[1];
-        var tempExportPath = string.IsNullOrEmpty(model.FolderName)
-            ? Path.Combine(configurations.TempDirectory, model.FolderName, model.PrintFileName)
-            : Path.Combine(configurations.TempDirectory, model.PrintFileName);
         var bytes = Convert.FromBase64String(base64String);
+        var tempExportPath = MakeFilePath(model.FolderName, model.PrintFileName);
         await File.WriteAllBytesAsync(tempExportPath, bytes);
         return tempExportPath;
+    }
+
+    private async Task<string> CreateFile(TextPrint model)
+    {
+        string tempExportPath = MakeFilePath(model.FolderName, model.PrintFileName);
+        await File.WriteAllTextAsync(tempExportPath, model.Text);
+        return tempExportPath;
+    }
+
+    private string MakeFilePath(string folderName, string printFilename)
+    {
+        return string.IsNullOrEmpty(folderName)
+            ? Path.Combine(configurations.TempDirectory, folderName, printFilename)
+            : Path.Combine(configurations.TempDirectory, printFilename);
     }
 }
