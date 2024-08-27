@@ -29,6 +29,7 @@ internal class Program
 
     private static async Task PrintText(string v)
     {
+        var printers = PrintService.GetPrinters();
         var base64Print = new TextPrint()
         {
             Text = v,
@@ -36,7 +37,7 @@ internal class Program
             DocumentName = "",
             FolderName = "",
             PaperSource = "",
-            PrinterName = "Some_Printer_Name",
+            PrinterName = printers[0],
             PrintFileName = Guid.NewGuid().ToString("N"),
         };
         await PrintService.PrintAsync(base64Print);
@@ -44,6 +45,7 @@ internal class Program
 
     static async Task PrintFile(string filename)
     {
+        var printers = PrintService.GetPrinters();
         var filePath = Path.Combine("samples", filename);
         var bytes = File.ReadAllBytes(filePath);
         var base64 = Convert.ToBase64String(bytes);
@@ -54,7 +56,7 @@ internal class Program
             DocumentName = "",
             FolderName = "",
             PaperSource = "",
-            PrinterName = "Some_Printer_Name",
+            PrinterName = printers[0],
             PrintFileName = Path.GetFileName(filePath),
         };
         await PrintService.PrintAsync(base64Print);

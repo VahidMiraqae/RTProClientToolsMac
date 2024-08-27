@@ -273,7 +273,7 @@ public class MacPrintCommand : IPrintCommand
     {
         var p = new Process
         {
-            StartInfo = new ProcessStartInfo("lpstat", "-P")
+            StartInfo = new ProcessStartInfo("lpstat", "-p")
             {
                 RedirectStandardOutput = true,
                 CreateNoWindow = true,
