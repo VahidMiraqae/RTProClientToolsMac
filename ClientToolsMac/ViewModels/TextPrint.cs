@@ -1,6 +1,7 @@
 ﻿namespace RTProClientToolsMac.ViewModels;
 
-public class TextPrint
+public class TextPrint :
+    IPrintFilePath
 {
     public string Text { get; set; }
     public string? PrinterName { get; set; }

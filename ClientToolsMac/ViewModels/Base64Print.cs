@@ -1,6 +1,7 @@
 ﻿namespace RTProClientToolsMac.ViewModels;
 
-public class Base64Print
+public class Base64Print :
+    IPrintFilePath
 {
     public string Base64String { get; set; }
     public string? PrinterName { get; set; }

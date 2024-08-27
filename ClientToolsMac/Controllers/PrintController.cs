@@ -32,6 +32,7 @@ public class PrintController(
     [RequestSizeLimit(209715200)]
     public async Task<IActionResult> PrintZPLText([FromBody] TextZPLPrint model)
     {
+        await printService.PrintAsync(model);
         return Ok();
     }
 
@@ -40,6 +41,7 @@ public class PrintController(
     [RequestSizeLimit(209715200)]
     public async Task<IActionResult> PrintZPLFile([FromBody] Base64ZPLPrint model)
     {
+        await printService.PrintAsync(model);
         return Ok();
     }
 }

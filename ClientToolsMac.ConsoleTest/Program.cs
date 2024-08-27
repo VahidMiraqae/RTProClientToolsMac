@@ -1,21 +1,21 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ClientToolsMac.Services;
+using Microsoft.Extensions.Configuration;
 using RTProClientToolsMac.Controllers;
 using RTProClientToolsMac.ViewModels;
-
-
-
 
 internal class Program
 {
     private static IConfiguration Configuration;
     private static Configurations Configs;
+    private static PrintFileResolverService PrintFileResolver;
     private static PrintService PrintService;
 
     private async static Task Main(string[] args)
     {
         MakeConfiguration();
         Configs = new Configurations(Configuration);
-        PrintService = new PrintService(Configs);
+        PrintFileResolver = new PrintFileResolverService(Configs);
+        PrintService = new PrintService(PrintFileResolver, Configs);
 
         await PrintFile("sample.pdf");
         //await PrintFile("sample.docx");
@@ -29,7 +29,12 @@ internal class Program
 
     private static async Task PrintText(string v)
     {
-        var printers = PrintService.GetPrinters();
+        var printer = "";
+        try
+        {
+            printer = PrintService.GetPrinters()[1];
+        }
+        catch { }
         var base64Print = new TextPrint()
         {
             Text = v,
@@ -37,7 +42,7 @@ internal class Program
             DocumentName = "",
             FolderName = "",
             PaperSource = "",
-            PrinterName = printers[0],
+            PrinterName = printer,
             PrintFileName = Guid.NewGuid().ToString("N"),
         };
         await PrintService.PrintAsync(base64Print);
@@ -45,7 +50,12 @@ internal class Program
 
     static async Task PrintFile(string filename)
     {
-        var printers = PrintService.GetPrinters();
+        var printer = "";
+        try
+        {
+            printer = PrintService.GetPrinters()[1];
+        }
+        catch { }
         var filePath = Path.Combine("samples", filename);
         var bytes = File.ReadAllBytes(filePath);
         var base64 = Convert.ToBase64String(bytes);
@@ -56,7 +66,7 @@ internal class Program
             DocumentName = "",
             FolderName = "",
             PaperSource = "",
-            PrinterName = printers[0],
+            PrinterName = printer,
             PrintFileName = Path.GetFileName(filePath),
         };
         await PrintService.PrintAsync(base64Print);

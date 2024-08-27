@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using ClientToolsMac.Exceptions;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace ClientToolsMac.MacPrint;
@@ -148,10 +149,18 @@ public class MacPrintCommand : IPrintCommand
                 UseShellExecute = false
             }
         };
-        await Task.Run(() =>
+
+        try
         {
-            process.Start();
-        });
+            await Task.Run(() =>
+            {
+                process.Start();
+            });
+        }
+        catch (Exception ex)
+        {
+            throw new TerminalCommandFailedException(ex);
+        }
     }
 
     private string MakeArgument()
@@ -280,15 +289,23 @@ public class MacPrintCommand : IPrintCommand
                 UseShellExecute = false
             }
         };
-        p.Start();
-        var list = new List<string>();
-        while (!p.StandardOutput.EndOfStream)
+
+        try
         {
-            string line = p.StandardOutput.ReadLine();
-            var match = Regex.Match(line, @"printer\s(\w*)");
-            list.Add(match.Groups[1].ToString());
+            p.Start();
+            var list = new List<string>();
+            while (!p.StandardOutput.EndOfStream)
+            {
+                string line = p.StandardOutput.ReadLine();
+                var match = Regex.Match(line, @"printer\s(\w*)");
+                list.Add(match.Groups[1].ToString());
+            }
+            return [.. list];
         }
-        return [.. list];
+        catch (Exception ex)
+        {
+            throw new TerminalCommandFailedException(ex);
+        }
     }
 
     public override string ToString()

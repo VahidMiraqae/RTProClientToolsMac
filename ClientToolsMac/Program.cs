@@ -1,3 +1,4 @@
+using ClientToolsMac.Services;
 using RTProClientToolsMac.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,10 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder1 =>
 
 builder.Services.AddSingleton<Configurations>();
 builder.Services.AddSingleton<PrintService>();
+builder.Services.AddSingleton<PrintFileResolverService>();
 
 var app = builder.Build();
+_ = app.Services.GetRequiredService<PrintFileResolverService>().StartPeriodicFileDeleter();
 app.UseCors("MyPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
