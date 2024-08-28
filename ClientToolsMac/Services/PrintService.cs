@@ -18,7 +18,7 @@ public class PrintService(
 
     public async Task PrintAsync(TextPrint model)
     {
-        var (absolutePath, relativePath) = await printFileResolver.MakeFile(model.Text, TextContentType.Base64, model);
+        var (absolutePath, relativePath) = await printFileResolver.MakeFile(model.Text, TextContentType.PlainText, model);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,
@@ -33,7 +33,7 @@ public class PrintService(
 
     public async Task PrintAsync(Base64Print model)
     {
-        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.PlainText, model);
+        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64, model);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,

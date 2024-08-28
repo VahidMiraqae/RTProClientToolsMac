@@ -25,6 +25,11 @@ public class PrintFileResolver
                : filename;
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
         var bytes = ToBytes(text, type);
+        var dir = Path.GetDirectoryName(absolutePath);
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
         await File.WriteAllBytesAsync(absolutePath, bytes);
         FileCreated?.Invoke(absolutePath);
         return (absolutePath, relativePath);
