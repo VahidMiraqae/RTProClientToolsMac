@@ -50,7 +50,7 @@ public class PrintFileResolver
         return type switch
         {
             TextContentType.PlainText => Encoding.UTF8.GetBytes(text),
-            TextContentType.Base64 => Convert.FromBase64String(text),
+            TextContentType.Base64 => Convert.FromBase64String(text.Split(',')[1]),
             _ => throw new NotSupportedException($"Text Content Type of '{type}' is not supported.")
         };
     }
