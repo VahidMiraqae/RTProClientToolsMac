@@ -1,4 +1,4 @@
-﻿namespace RTProClientToolsMac.ViewModels;
+﻿namespace RTProClientToolsMac.Models;
 
 public class Base64ZPLPrint
 {

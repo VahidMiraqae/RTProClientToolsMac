@@ -1,11 +1,13 @@
+using ClientToolsMac.Enums;
+using ClientToolsMac.Infos;
 using ClientToolsMac.MacPrint;
 using ClientToolsMac.Services;
-using RTProClientToolsMac.ViewModels;
+using RTProClientToolsMac.Models;
 
 namespace RTProClientToolsMac.Controllers;
 
 public class PrintService(
-    PrintFileResolverService printFileResolverService,
+    PrintFileResolver printFileResolver,
     Configurations configurations
     )
 {
@@ -16,7 +18,7 @@ public class PrintService(
 
     public async Task PrintAsync(TextPrint model)
     {
-        var (absolutePath, relativePath) = await printFileResolverService.MakeFile(model.Text, TextContentType.Base64, model);
+        var (absolutePath, relativePath) = await printFileResolver.MakeFile(model.Text, TextContentType.Base64, model);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,
@@ -31,7 +33,7 @@ public class PrintService(
 
     public async Task PrintAsync(Base64Print model)
     {
-        var (absolutePath, _) = await printFileResolverService.MakeFile(model.Base64String, TextContentType.PlainText, model);
+        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.PlainText, model);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,
@@ -44,7 +46,7 @@ public class PrintService(
 
     public async Task PrintAsync(TextZPLPrint model)
     {
-        var (absolutePath, _) = await printFileResolverService.MakeFile(model.TextZPL, TextContentType.PlainText);
+        var (absolutePath, _) = await printFileResolver.MakeFile(model.TextZPL, TextContentType.PlainText);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,
@@ -56,7 +58,7 @@ public class PrintService(
 
     public async Task PrintAsync(Base64ZPLPrint model)
     {
-        var (absolutePath, _) = await printFileResolverService.MakeFile(model.Base64String, TextContentType.Base64);
+        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64);
         var printJobData = new PrinterJobDataInfo()
         {
             FilePath = absolutePath,

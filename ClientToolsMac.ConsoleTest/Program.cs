@@ -1,20 +1,20 @@
 ﻿using ClientToolsMac.Services;
 using Microsoft.Extensions.Configuration;
 using RTProClientToolsMac.Controllers;
-using RTProClientToolsMac.ViewModels;
+using RTProClientToolsMac.Models;
 
 internal class Program
 {
     private static IConfiguration Configuration;
     private static Configurations Configs;
-    private static PrintFileResolverService PrintFileResolver;
+    private static PrintFileResolver PrintFileResolver;
     private static PrintService PrintService;
 
     private async static Task Main(string[] args)
     {
         MakeConfiguration();
         Configs = new Configurations(Configuration);
-        PrintFileResolver = new PrintFileResolverService(Configs);
+        PrintFileResolver = new PrintFileResolver(Configs);
         PrintService = new PrintService(PrintFileResolver, Configs);
 
         await PrintFile("sample.pdf");

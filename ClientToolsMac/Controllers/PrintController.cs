@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using RTProClientToolsMac.ViewModels;
+using RTProClientToolsMac.Models;
 
 namespace RTProClientToolsMac.Controllers;
 

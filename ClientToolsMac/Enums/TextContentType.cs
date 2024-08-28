@@ -1,4 +1,4 @@
-﻿namespace ClientToolsMac.Services
+﻿namespace ClientToolsMac.Enums
 {
     public enum TextContentType
     {

@@ -1,4 +1,6 @@
-﻿namespace RTProClientToolsMac.ViewModels;
+﻿using ClientToolsMac.Models.Contracts;
+
+namespace RTProClientToolsMac.Models;
 
 public class TextPrint :
     IPrintFilePath

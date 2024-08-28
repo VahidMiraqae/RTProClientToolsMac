@@ -1,4 +1,4 @@
-﻿namespace RTProClientToolsMac.ViewModels
+﻿namespace ClientToolsMac.Models.Contracts
 {
     public interface IPrintFilePath
     {

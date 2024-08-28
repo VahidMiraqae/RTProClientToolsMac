@@ -15,10 +15,10 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder1 =>
 
 builder.Services.AddSingleton<Configurations>();
 builder.Services.AddSingleton<PrintService>();
-builder.Services.AddSingleton<PrintFileResolverService>();
+builder.Services.AddSingleton<PrintFileResolver>();
 
 var app = builder.Build();
-_ = app.Services.GetRequiredService<PrintFileResolverService>().StartPeriodicFileDeleter();
+_ = app.Services.GetRequiredService<PrintFileResolver>().StartPeriodicFileDeleter();
 app.UseCors("MyPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

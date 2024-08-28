@@ -1,4 +1,4 @@
-﻿namespace RTProClientToolsMac.ViewModels
+﻿namespace ClientToolsMac.Infos
 {
     public class PrinterJobDataInfo
     {
