@@ -10,6 +10,7 @@ public class PrintFileResolver
 {
     private Configurations _configurations;
     private PeriodicTimer _periodicTimer;
+    public event Action<string> FileCreated;
 
     public PrintFileResolver(Configurations configurations)
     {
@@ -25,6 +26,7 @@ public class PrintFileResolver
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
         var bytes = ToBytes(text, type);
         await File.WriteAllBytesAsync(absolutePath, bytes);
+        FileCreated?.Invoke(absolutePath);
         return (absolutePath, relativePath);
     }
 
@@ -34,6 +36,7 @@ public class PrintFileResolver
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
         var bytes = ToBytes(text, type);
         await File.WriteAllBytesAsync(absolutePath, bytes);
+        FileCreated?.Invoke(absolutePath);
         return (absolutePath, relativePath);
     }
 

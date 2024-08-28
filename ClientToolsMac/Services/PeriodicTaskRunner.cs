@@ -2,102 +2,127 @@
 
 namespace ClientToolsMac.Services
 {
-    public class PeriodicTaskRunner(
-        Configurations configurations
-        )
+    public class PeriodicTaskRunner
     {
-        private static PeriodicTimer _periodicTimer;
         private static readonly object _lock = new();
-        private static bool _started = false;
-        private LinkedList<XXXX> ll;
+        private LinkedList<DeleteFileTask> _deleteFileTasks;
         private Timer _timer;
+        private Configurations _configurations;
+        private PrintFileResolver _printFileResolver;
+        private HashSet<string> _failedDeletes = [];
 
-        static PeriodicTaskRunner()
+        private bool TimerIsSet => _timer is not null;
+        record DeleteFileTask(DateTime WhenUtc, string filePath);
+
+        public PeriodicTaskRunner(
+            Configurations configurations,
+            PrintFileResolver printFileResolver
+            )
         {
-            Start();
+            _configurations = configurations;
+            _printFileResolver = printFileResolver;
         }
 
-        private void Start(Task task)
-        {
-            if (ll.First is not null)
-            {
-                _timer = new Timer(FFFF, ll.First.Value.filePath, ll.First.Value.WhenUtc - DateTime.UtcNow, Timeout.InfiniteTimeSpan);
-            }
-        }
-
-        private void FFFF(object? state)
-        {
-            var filePath = (string)state;
-
-        }
-
-        private async Task LoadTempFileSchedule()
+        public async Task LoadTempFileSchedule()
         {
             await Task.Run(() =>
             {
-                var directories = Directory.GetFiles(configurations.TempDirectory, "*", SearchOption.AllDirectories)
+                var directories = Directory.GetFiles(_configurations.TempDirectory, "*", SearchOption.AllDirectories)
                 .Select(file =>
                 {
                     var creationTime = File.GetCreationTimeUtc(file);
-                    return new XXXX(creationTime.AddDays(1), file);
+                    return new DeleteFileTask(creationTime.AddMinutes(1), file);
                 })
                 .OrderBy(a => a.WhenUtc);
-                ll = new LinkedList<XXXX>(directories);
+                _deleteFileTasks = new LinkedList<DeleteFileTask>(directories);
+                Start();
             });
+            _printFileResolver.FileCreated += PrintFileResolver_FileCreated;
         }
 
-        public async Task StartFileDeleter()
+        private void Start()
         {
             Monitor.Enter(_lock);
 
-            if (_started)
+            if (TimerIsSet)
             {
                 Monitor.Exit(_lock);
                 return;
             }
-            _started = true;
-            Monitor.Exit(_lock);
-#if DEBUG
-            _periodicTimer = new PeriodicTimer(TimeSpan.FromMinutes(1));
-#else
-            _periodicTimer = new PeriodicTimer(TimeSpan.FromHours(1));
-#endif
-            while (await _periodicTimer.WaitForNextTickAsync())
+
+            if (_deleteFileTasks.First is not null)
             {
-                var nowUtc = DateTime.UtcNow;
-                var directories = Directory.GetFiles(configurations.TempDirectory, "*", SearchOption.AllDirectories)
-                    .GroupBy(Path.GetDirectoryName)
-                    .Select(a => new XXX([.. a], a.Key));
-                foreach (var directory in directories)
+                var dueTime = _deleteFileTasks.First.Value.WhenUtc - DateTime.UtcNow;
+
+                if (dueTime < TimeSpan.Zero)
                 {
-                    foreach (var file in directory.FilePaths)
+                    dueTime = TimeSpan.Zero;
+                }
+
+                _timer = new Timer(DeleteFile, _deleteFileTasks.First.Value.filePath, dueTime, Timeout.InfiniteTimeSpan);
+                _deleteFileTasks.RemoveFirst();
+            }
+            Monitor.Exit(_lock);
+        }
+
+        private void DeleteFile(object? state)
+        {
+            Monitor.Enter(_lock);
+            DeleteFile(state as string);
+            foreach (var filePath in _failedDeletes.ToList())
+            {
+                _failedDeletes.Remove(filePath);
+                DeleteFile(filePath);
+            }
+            _timer = null;
+            Start();
+            Monitor.Exit(_lock);
+        }
+
+        private void DeleteFile(string? filePath)
+        {
+            if (filePath is null)
+            {
+                return;
+            }
+            var directory = Path.GetDirectoryName(filePath);
+            if (!directory.Equals(_configurations.TempDirectory))
+            {
+                if (Directory.GetFiles(directory).Length == 1)
+                {
+                    try
                     {
-                        var creationTimeUtc = File.GetCreationTimeUtc(file);
-#if DEBUG
-                        if ((nowUtc - creationTimeUtc).TotalMinutes > 5)
-#else
-                        if ((nowUtc - creationTime) > configurations.KeepTempFilesFor)
-#endif
+                        if (Directory.Exists(directory))
                         {
-                            try
-                            {
-                                if (directory.FilePaths.Length == 1 && !directory.Path.Equals(configurations.TempDirectory))
-                                {
-                                    Directory.Delete(directory.Path, true);
-                                }
-                                else
-                                {
-                                    File.Delete(file);
-                                }
-                            }
-                            catch { }
+                            Directory.Delete(directory, true);
                         }
                     }
+                    catch
+                    {
+                        _failedDeletes.Add(filePath);
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+                catch
+                {
+                    _failedDeletes.Add(filePath);
                 }
             }
         }
 
-        record XXX(string[] FilePaths, string Path);
-        record XXXX(DateTime WhenUtc, string filePath);
+        private void PrintFileResolver_FileCreated(string filePath)
+        {
+            _deleteFileTasks.AddLast(new DeleteFileTask(DateTime.UtcNow.AddMinutes(1), filePath));
+            Start();
+        }
     }
 }
