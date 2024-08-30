@@ -1,7 +1,6 @@
-﻿using ClientToolsMac.Services;
+﻿using ClientToolsMac.Models;
+using ClientToolsMac.Services;
 using Microsoft.Extensions.Configuration;
-using RTProClientToolsMac.Controllers;
-using RTProClientToolsMac.Models;
 
 internal class Program
 {

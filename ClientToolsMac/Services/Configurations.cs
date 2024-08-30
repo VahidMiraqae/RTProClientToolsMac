@@ -1,5 +1,4 @@
-
-namespace RTProClientToolsMac.Controllers;
+namespace ClientToolsMac.Services;
 
 public class Configurations(IConfiguration configuration)
 {

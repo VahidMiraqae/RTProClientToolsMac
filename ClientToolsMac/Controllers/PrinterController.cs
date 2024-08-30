@@ -1,6 +1,7 @@
+using ClientToolsMac.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RTProClientToolsMac.Controllers;
+namespace ClientToolsMac.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

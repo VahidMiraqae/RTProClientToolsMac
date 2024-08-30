@@ -1,4 +1,4 @@
-﻿namespace RTProClientToolsMac.Models;
+﻿namespace ClientToolsMac.Models;
 
 public class TextZPLPrint
 {

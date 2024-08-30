@@ -1,6 +1,6 @@
 ﻿using ClientToolsMac.Models.Contracts;
 
-namespace RTProClientToolsMac.Models;
+namespace ClientToolsMac.Models;
 
 public class Base64Print :
     IPrintFilePath

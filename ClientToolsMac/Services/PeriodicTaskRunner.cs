@@ -1,6 +1,4 @@
-﻿using RTProClientToolsMac.Controllers;
-
-namespace ClientToolsMac.Services
+﻿namespace ClientToolsMac.Services
 {
     public class PeriodicTaskRunner
     {

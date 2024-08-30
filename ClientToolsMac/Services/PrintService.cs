@@ -1,10 +1,9 @@
 using ClientToolsMac.Enums;
 using ClientToolsMac.Infos;
 using ClientToolsMac.MacPrint;
-using ClientToolsMac.Services;
-using RTProClientToolsMac.Models;
+using ClientToolsMac.Models;
 
-namespace RTProClientToolsMac.Controllers;
+namespace ClientToolsMac.Services;
 
 public class PrintService(
     PrintFileResolver printFileResolver,
