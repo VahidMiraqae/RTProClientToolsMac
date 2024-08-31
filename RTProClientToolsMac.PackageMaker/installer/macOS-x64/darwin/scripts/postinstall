@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #Custermize this for your application
-APPLICATION_FILE_PATH=ClientToolsMac
+APPLICATION_FILE_PATH=__PRODUCT__
 
 #Parameters
-PRODUCT_HOME=/Library/ClientToolsMac/1.0.0
+PRODUCT_HOME=/Library/__PRODUCT__/__VERSION__
 
 echo "Post installation process started"
 
@@ -15,12 +15,12 @@ chmod -R 755 .
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 
 #Add application shortcut to /usr/local/bin
-rm -f /usr/local/bin/ClientToolsMac-1.0.0
-ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/ClientToolsMac-1.0.0
+rm -f /usr/local/bin/__PRODUCT__-__VERSION__
+ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__-__VERSION__
 echo "Post installation process finished"
 
-/usr/bin/osascript -e "tell application \"System Events\" to make new login item with properties { path: \"/Library/ClientToolsMac/1.0.0/ClientToolsMac\", hidden:false } at end"
+/usr/bin/osascript -e "tell application \"System Events\" to make new login item with properties { path: \"/Library/__PRODUCT__/__VERSION__/__PRODUCT__\", hidden:false } at end"
 
 osascript -e 'tell app "Terminal"
-    do script "/Library/ClientToolsMac/1.0.0/ClientToolsMac"
+    do script "/Library/__PRODUCT__/__VERSION__/__PRODUCT__"
 end tell'

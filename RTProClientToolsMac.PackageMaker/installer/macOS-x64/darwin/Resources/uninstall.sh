@@ -28,7 +28,7 @@ fi
 
 echo "Welcome to Application Uninstaller"
 echo "The following packages will be REMOVED:"
-echo "  ClientToolsMac-1.0.0"
+echo "  __PRODUCT__-__VERSION__"
 while true; do
     read -p "Do you wish to continue [Y/n]?" answer
     [[ $answer == "y" || $answer == "Y" || $answer == "" ]] && break
@@ -38,12 +38,12 @@ done
 
 
 #Need to replace these with install preparation script
-VERSION=1.0.0
-PRODUCT=ClientToolsMac
+VERSION=__VERSION__
+PRODUCT=__PRODUCT__
 
 echo "Application uninstalling process started"
 # remove link to shorcut file
-find "/usr/local/bin/" -name "ClientToolsMac-1.0.0" | xargs rm
+find "/usr/local/bin/" -name "__PRODUCT__-__VERSION__" | xargs rm
 if [ $? -eq 0 ]
 then
   echo "[1/3] [DONE] Successfully deleted shortcut links"
@@ -69,7 +69,7 @@ else
   echo "[3/3] [ERROR] Could not delete application" >&2
 fi
 
-/usr/bin/osascript -e "tell application \"System Events\" to delete login item \"ClientToolsMac\""
+/usr/bin/osascript -e "tell application \"System Events\" to delete login item \"__PRODUCT__\""
 
 echo "Application uninstall process finished"
 exit 0
