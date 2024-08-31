@@ -4,6 +4,13 @@ namespace RTProClientToolsMac.PackageMaker;
 
 internal class Program
 {
+    private const string INSTALLER_DIR = "installer";
+    private const string MACOS_X64_DIR = "macOS-x64";
+    private const string APP_DIR = "application";
+    private const string DARWIN_DIR = "darwin";
+    private const string PRODUCT_PLACE_HOLDER = "__PRODUCT__";
+    private const string VERSION_PLACE_HOLDER = "__VERSION__";
+    private const string PACKAGE_BUILDER_BASH = "build-macos-x64.sh";
     private static HashSet<string> _nonTextFileExtensions = [".png"];
 
     private static void Main(string[] args)
@@ -11,26 +18,21 @@ internal class Program
         var productName = nameof(RTProClientToolsMac);
         var version = "1.0.0";
 
-        var projectDir1 = @"..\..\..\..\RTProClientToolsMac";
-        //var installerDir = @"..\..\..\..\installer";
-        //var projectDir = @"C:\Users\Vahid\Desktop\RTProClientToolsMac\RTProClientToolsMac\RTProClientToolsMac.csproj";
+        var projectDir = $@"..\..\..\..\{productName}";
         var currentDir = AppDomain.CurrentDomain.BaseDirectory;
-        //var publishFolder = Path.Combine(currentDir, "publish");
 
-        //var targetInstaller = Path.Combine(currentDir, "installer");
-        //CopyFilesRecursively(installerDir, targetInstaller);
-
-        var applicationDir = Path.Combine(currentDir, "installer", "macOS-x64", "application");
+        // publish
+        var applicationDir = Path.Combine(currentDir, INSTALLER_DIR, MACOS_X64_DIR, APP_DIR);
         var commands = new List<string>()
         {
-            $"cd {projectDir1}",
+            $"cd {projectDir}",
             $"dotnet publish -o {applicationDir}"
         };
         var ars = string.Join(" & ", commands);
-
         Process.Start("cmd.exe", "/C " + ars).WaitForExit();
 
-        var s = Path.Combine(currentDir, "installer", "macOS-x64", "darwin");
+        // replace product and version
+        var s = Path.Combine(currentDir, INSTALLER_DIR, MACOS_X64_DIR, DARWIN_DIR);
         foreach (var file in Directory.GetFiles(s, "*", SearchOption.AllDirectories))
         {
             var extension = Path.GetExtension(file);
@@ -39,26 +41,16 @@ internal class Program
                 continue;
             }
             var content = File.ReadAllText(file);
-            var content1 = content.Replace("__PRODUCT__", productName)
-                .Replace("__VERSION__", version);
+            var content1 = content.Replace(PRODUCT_PLACE_HOLDER, productName)
+                .Replace(VERSION_PLACE_HOLDER, version);
             File.WriteAllText(file, content1);
         }
 
-        var path = Path.Combine("installer", "macOS-x64", "build-macos-x64.sh");
+        // build package
+        var path = Path.Combine(INSTALLER_DIR, MACOS_X64_DIR, PACKAGE_BUILDER_BASH);
         Process.Start("bash", path).WaitForExit();
 
+        Console.WriteLine("package was created in installer/macOS-x64/target");
         Console.ReadLine();
-    }
-
-    private static void CopyFilesRecursively(string sourcePath, string targetPath)
-    {
-        foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-        {
-            Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
-        }
-        foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
-        {
-            File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
-        }
     }
 }
