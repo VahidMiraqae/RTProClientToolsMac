@@ -11,11 +11,6 @@ DATE=`date +%Y-%m-%d`
 TIME=`date +%H:%M:%S`
 LOG_PREFIX="[$DATE $TIME]"
 
-function printSignature() {
-  cat "$SCRIPTPATH/utils/ascii_art.txt"
-  echo
-}
-
 function printUsage() {
   echo -e "\033[1mUsage:\033[0m"
   echo "$0 [APPLICATION_NAME] [APPLICATION_VERSION]"
@@ -27,9 +22,6 @@ function printUsage() {
   echo "$0 wso2am 2.6.0"
 
 }
-
-#Start the generator
-printSignature
 
 #Argument validation
 if [[ "$1" == "-h" ||  "$1" == "--help" ]]; then
@@ -164,13 +156,6 @@ function createInstaller() {
     log_info "Application installer generation process started.(3 Steps)"
     buildPackage
     buildProduct ${PRODUCT}-macos-installer-x64-${VERSION}.pkg
-    while true; do
-        read -p "Do you wish to sign the installer (You should have Apple Developer Certificate) [y/N]?" answer
-        [[ $answer == "y" || $answer == "Y" ]] && FLAG=true && break
-        [[ $answer == "n" || $answer == "N" || $answer == "" ]] && log_info "Skipped signing process." && FLAG=false && break
-        echo "Please answer with 'y' or 'n'"
-    done
-    [[ $FLAG == "true" ]] && signProduct ${PRODUCT}-macos-installer-x64-${VERSION}.pkg
     log_info "Application installer generation steps finished."
 }
 
