@@ -11,7 +11,7 @@ internal class Program
 
     private async static Task Main(string[] args)
     {
-        MakeConfiguration();
+        MakeConfiguration(); 
         Configs = new Configurations(Configuration);
         PrintFileResolver = new PrintFileResolver(Configs);
         PrintService = new PrintService(PrintFileResolver, Configs);
