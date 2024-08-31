@@ -11,4 +11,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+	<Target Name="Test" AfterTargets="Publish">
+		<Exec Command="echo 'vahid'" />
+	</Target>
 </Project>
