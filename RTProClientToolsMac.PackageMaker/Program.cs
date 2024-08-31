@@ -1,17 +1,22 @@
 ﻿using System.Diagnostics;
 
+namespace RTProRTProClientToolsMac.PackageMaker;
+
 internal class Program
 {
     private static void Main(string[] args)
     {
-        var projectDir1 = @"..\..\..\..\ClientToolsMac";
-        var installerDir = @"..\..\..\..\installer";
-        var projectDir = @"C:\Users\Vahid\Desktop\ClientToolsMac\ClientToolsMac\ClientToolsMac.csproj";
-        var currentDir = AppDomain.CurrentDomain.BaseDirectory;
-        var publishFolder = Path.Combine(currentDir, "publish");
+        var productName = nameof(RTProRTProClientToolsMac);
+        var version = "1.0.0";
 
-        var targetInstaller = Path.Combine(currentDir, "installer");
-        CopyFilesRecursively(installerDir, targetInstaller);
+        var projectDir1 = @"..\..\..\..\RTProClientToolsMac";
+        //var installerDir = @"..\..\..\..\installer";
+        //var projectDir = @"C:\Users\Vahid\Desktop\RTProClientToolsMac\RTProClientToolsMac\RTProClientToolsMac.csproj";
+        var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+        //var publishFolder = Path.Combine(currentDir, "publish");
+
+        //var targetInstaller = Path.Combine(currentDir, "installer");
+        //CopyFilesRecursively(installerDir, targetInstaller);
 
         var applicationDir = Path.Combine(currentDir, "installer", "macOS-x64", "application");
         var commands = new List<string>()
@@ -21,10 +26,16 @@ internal class Program
         };
         var ars = string.Join(" & ", commands);
 
-        Process.Start("cmd.exe", "/C " + ars);
+        Process.Start("cmd.exe", "/C " + ars).WaitForExit();
 
-
-
+        var s = Path.Combine(currentDir, "installer", "macOS-x64", "darwin");
+        foreach (var file in Directory.GetFiles(s, "*", SearchOption.AllDirectories))
+        {
+            var content = File.ReadAllText(file);
+            var content1 = content.Replace("__PRODUCT__", productName)
+                .Replace("__VERSION__", version);
+            File.WriteAllText(file, content1);
+        }
         Console.ReadLine();
     }
 

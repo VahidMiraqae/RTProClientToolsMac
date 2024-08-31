@@ -8,6 +8,35 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="installer\macOS-x64\darwin\.DS_Store" />
+    <None Update="installer\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\build-macos-x64.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Distribution">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Resources\banner.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Resources\conclusion.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Resources\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Resources\uninstall.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\Resources\welcome.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\macOS-x64\darwin\scripts\postinstall">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="installer\README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
