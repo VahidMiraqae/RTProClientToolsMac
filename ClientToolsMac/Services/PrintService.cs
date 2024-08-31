@@ -17,54 +17,62 @@ public class PrintService(
 
     public async Task PrintAsync(TextPrint model)
     {
-        var (absolutePath, relativePath) = await printFileResolver.MakeFile(model.Text, TextContentType.PlainText, model);
-        var printJobData = new PrinterJobDataInfo()
+        await printFileResolver.MakeFile(model.Text, TextContentType.PlainText, model, async (relativePath, absolutePath) =>
         {
-            FilePath = absolutePath,
-            CopyCount = model.CopyCount,
-            PrinterName = model.PrinterName,
-            PaperSource = model.PaperSource
-        };
-        var printJobTask = CommitPrintJob(printJobData);
-        var copyFileTask = CopyFile(absolutePath, relativePath);
-        await Task.WhenAll(printJobTask, copyFileTask);
+            var printJobData = new PrinterJobDataInfo()
+            {
+                FilePath = absolutePath,
+                CopyCount = model.CopyCount,
+                PrinterName = model.PrinterName,
+                PaperSource = model.PaperSource
+            };
+            var printJobTask = CommitPrintJob(printJobData);
+            var copyFileTask = CopyFile(absolutePath, relativePath);
+            await Task.WhenAll(printJobTask, copyFileTask);
+        });
     }
 
     public async Task PrintAsync(Base64Print model)
     {
-        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64, model);
-        var printJobData = new PrinterJobDataInfo()
+        await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64, model, async (relativePath, absolutePath) =>
         {
-            FilePath = absolutePath,
-            CopyCount = model.CopyCount,
-            PrinterName = model.PrinterName,
-            PaperSource = model.PaperSource
-        };
-        await CommitPrintJob(printJobData);
+            var printJobData = new PrinterJobDataInfo()
+            {
+                FilePath = absolutePath,
+                CopyCount = model.CopyCount,
+                PrinterName = model.PrinterName,
+                PaperSource = model.PaperSource
+            };
+            await CommitPrintJob(printJobData);
+        });
     }
 
     public async Task PrintAsync(TextZPLPrint model)
     {
-        var (absolutePath, _) = await printFileResolver.MakeFile(model.TextZPL, TextContentType.PlainText);
-        var printJobData = new PrinterJobDataInfo()
+        await printFileResolver.MakeFile(model.TextZPL, TextContentType.PlainText, async (relativePath, absolutePath) =>
         {
-            FilePath = absolutePath,
-            CopyCount = model.CopyCount,
-            PrinterName = model.PrinterName,
-        };
-        await CommitPrintJob(printJobData);
+            var printJobData = new PrinterJobDataInfo()
+            {
+                FilePath = absolutePath,
+                CopyCount = model.CopyCount,
+                PrinterName = model.PrinterName,
+            };
+            await CommitPrintJob(printJobData);
+        });
     }
 
     public async Task PrintAsync(Base64ZPLPrint model)
     {
-        var (absolutePath, _) = await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64);
-        var printJobData = new PrinterJobDataInfo()
+        await printFileResolver.MakeFile(model.Base64String, TextContentType.Base64, async (relativePath, absolutePath) =>
         {
-            FilePath = absolutePath,
-            CopyCount = model.CopyCount,
-            PrinterName = model.PrinterName,
-        };
-        await CommitPrintJob(printJobData);
+            var printJobData = new PrinterJobDataInfo()
+            {
+                FilePath = absolutePath,
+                CopyCount = model.CopyCount,
+                PrinterName = model.PrinterName,
+            };
+            await CommitPrintJob(printJobData);
+        });
     }
 
     private async Task CopyFile(string filePath, string relativePath)

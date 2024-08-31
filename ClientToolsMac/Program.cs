@@ -15,10 +15,8 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder1 =>
 builder.Services.AddSingleton<Configurations>();
 builder.Services.AddSingleton<PrintService>();
 builder.Services.AddSingleton<PrintFileResolver>();
-builder.Services.AddSingleton<PeriodicTaskRunner>();
 
 var app = builder.Build();
-_ = app.Services.GetRequiredService<PeriodicTaskRunner>().LoadTempFileSchedule();
 app.UseCors("MyPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -152,10 +152,8 @@ public class MacPrintCommand : IPrintCommand
 
         try
         {
-            await Task.Run(() =>
-            {
-                process.Start();
-            });
+            process.Start();
+            await process.WaitForExitAsync();
         }
         catch (Exception ex)
         {

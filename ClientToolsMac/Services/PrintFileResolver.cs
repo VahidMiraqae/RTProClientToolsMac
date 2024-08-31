@@ -9,14 +9,14 @@ public class PrintFileResolver
 {
     private Configurations _configurations;
     private PeriodicTimer _periodicTimer;
-    public event Action<string> FileCreated;
+    public delegate Task ActionOnCreatedFile(string relativePath, string absolutePath);
 
     public PrintFileResolver(Configurations configurations)
     {
         _configurations = configurations;
     }
 
-    public async Task<(string absolutePath, string relativePath)> MakeFile(string text, TextContentType type, IPrintFilePath printFilePath)
+    public async Task MakeFile(string text, TextContentType type, IPrintFilePath printFilePath, ActionOnCreatedFile action)
     {
         var filename = printFilePath.PrintFileName ?? Guid.NewGuid().ToString("N");
         var relativePath = !string.IsNullOrEmpty(printFilePath.FolderName)
@@ -24,24 +24,62 @@ public class PrintFileResolver
                : filename;
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
         var bytes = ToBytes(text, type);
-        var dir = Path.GetDirectoryName(absolutePath);
-        if (!Directory.Exists(dir))
+        try
         {
-            Directory.CreateDirectory(dir);
+            var dir = Path.GetDirectoryName(absolutePath);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            await File.WriteAllBytesAsync(absolutePath, bytes);
+            await action(relativePath, absolutePath);
         }
-        await File.WriteAllBytesAsync(absolutePath, bytes);
-        FileCreated?.Invoke(absolutePath);
-        return (absolutePath, relativePath);
+        finally
+        {
+            DeleteFile(absolutePath);
+        }
     }
 
-    public async Task<(string absolutePath, string relativePath)> MakeFile(string text, TextContentType type)
+    public async Task MakeFile(string text, TextContentType type, ActionOnCreatedFile action)
     {
         var relativePath = Guid.NewGuid().ToString("N");
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
         var bytes = ToBytes(text, type);
-        await File.WriteAllBytesAsync(absolutePath, bytes);
-        FileCreated?.Invoke(absolutePath);
-        return (absolutePath, relativePath);
+        try
+        {
+            await File.WriteAllBytesAsync(absolutePath, bytes);
+            await action(relativePath, absolutePath);
+        }
+        finally
+        {
+            DeleteFile(absolutePath);
+        }
+    }
+
+    private void DeleteFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
+        try
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            var filesCountInDirectory = Directory.GetFiles(filePath).Length;
+            if (filesCountInDirectory == 1 && !directory.Equals(_configurations.TempDirectory))
+            {
+                Directory.Delete(directory, true);
+            }
+            else
+            {
+                File.Delete(filePath);
+            }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private static byte[] ToBytes(string text, TextContentType type)
