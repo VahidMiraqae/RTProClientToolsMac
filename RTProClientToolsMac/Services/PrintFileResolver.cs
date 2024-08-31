@@ -7,8 +7,7 @@ namespace RTProClientToolsMac.Services;
 
 public class PrintFileResolver
 {
-    private Configurations _configurations;
-    private PeriodicTimer _periodicTimer;
+    private readonly Configurations _configurations;
     public delegate Task ActionOnCreatedFile(string relativePath, string absolutePath);
 
     public PrintFileResolver(Configurations configurations)
@@ -16,38 +15,34 @@ public class PrintFileResolver
         _configurations = configurations;
     }
 
-    public async Task MakeFile(string text, TextContentType type, IPrintFilePath printFilePath, ActionOnCreatedFile action)
+    public async Task MakeTempFile(string? text, TextContentType type, ActionOnCreatedFile action, IPrintFilePath? printFilePath = null)
     {
-        var filename = printFilePath.PrintFileName ?? Guid.NewGuid().ToString("N");
-        var relativePath = !string.IsNullOrEmpty(printFilePath.FolderName)
-               ? Path.Combine(printFilePath.FolderName, filename)
-               : filename;
+        if (text is null)
+        {
+            await Task.CompletedTask;
+            return;
+        }
+        string relativePath;
+        if (printFilePath is not null)
+        {
+            var filename = printFilePath.PrintFileName ?? Guid.NewGuid().ToString("N");
+            relativePath = !string.IsNullOrEmpty(printFilePath.FolderName)
+                   ? Path.Combine(printFilePath.FolderName, filename)
+                   : filename;
+        }
+        else
+        {
+            relativePath = Guid.NewGuid().ToString("N");
+        }
         var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
-        var bytes = ToBytes(text, type);
         try
         {
-            var dir = Path.GetDirectoryName(absolutePath);
-            if (!Directory.Exists(dir))
+            var directory = Path.GetDirectoryName(absolutePath);
+            if (directory is not null && !Directory.Exists(directory))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(directory);
             }
-            await File.WriteAllBytesAsync(absolutePath, bytes);
-            await action(relativePath, absolutePath);
-        }
-        finally
-        {
-            DeleteFile(absolutePath);
-        }
-    }
-
-    public async Task MakeFile(string text, TextContentType type, ActionOnCreatedFile action)
-    {
-        var relativePath = Guid.NewGuid().ToString("N");
-        var absolutePath = Path.Combine(_configurations.TempDirectory, relativePath);
-        var bytes = ToBytes(text, type);
-        try
-        {
-            await File.WriteAllBytesAsync(absolutePath, bytes);
+            await File.WriteAllBytesAsync(absolutePath, ToBytes(text, type));
             await action(relativePath, absolutePath);
         }
         finally
@@ -58,7 +53,7 @@ public class PrintFileResolver
 
     private void DeleteFile(string filePath)
     {
-        if (!File.Exists(filePath))
+        if (filePath is null || !File.Exists(filePath))
         {
             return;
         }
@@ -66,6 +61,10 @@ public class PrintFileResolver
         try
         {
             var directory = Path.GetDirectoryName(filePath);
+            if (directory is null)
+            {
+                return;
+            }
             var filesCountInDirectory = Directory.GetFiles(filePath).Length;
             if (filesCountInDirectory == 1 && !directory.Equals(_configurations.TempDirectory))
             {

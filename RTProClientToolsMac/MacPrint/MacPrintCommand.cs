@@ -6,7 +6,7 @@ namespace RTProClientToolsMac.MacPrint;
 
 public class MacPrintCommand : IPrintCommand
 {
-    private string _printerName;
+    private string? _printerName;
     private string _filename;
     private Orientation _orientation = MacPrint.Orientation.Portrait;
     private bool _fitToPage;
@@ -22,19 +22,18 @@ public class MacPrintCommand : IPrintCommand
     private PrintSides _printSides;
     private MediaType? _mediaType;
     private MediaSource? _mediaSource;
-    private string _mediaSizeName;
-    private string[] _ranges;
-    private string _mediaSourceName;
+    private string? _mediaSizeName;
+    private string[]? _ranges;
+    private string? _mediaSourceName;
 
-    public MacPrintCommand Printer(string printerName)
-    {
-        _printerName = printerName;
-        return this;
-    }
-
-    public MacPrintCommand Filename(string filename)
+    public MacPrintCommand(string filename)
     {
         _filename = filename;
+    }
+
+    public MacPrintCommand Printer(string? printerName)
+    {
+        _printerName = printerName;
         return this;
     }
 
@@ -113,7 +112,7 @@ public class MacPrintCommand : IPrintCommand
         return this;
     }
 
-    public MacPrintCommand MediaSource(string sourse)
+    public MacPrintCommand MediaSource(string? sourse)
     {
         _mediaSourceName = sourse;
         return this;
@@ -137,7 +136,6 @@ public class MacPrintCommand : IPrintCommand
 
     public async Task ExecuteAsync()
     {
-        ArgumentNullException.ThrowIfNull(_filename);
         var arguements = MakeArgument();
 
         var process = new Process
@@ -163,6 +161,7 @@ public class MacPrintCommand : IPrintCommand
 
     private string MakeArgument()
     {
+        ArgumentNullException.ThrowIfNull(_filename);
         var argsList = new List<string>();
 
         if (_printerName is not null)
@@ -176,7 +175,8 @@ public class MacPrintCommand : IPrintCommand
             {
                 MacPrint.Orientation.Landscape => "-o landscape", // -o orientation-requested=4
                 MacPrint.Orientation.ReversePortrait => "-o orientation-requested=6",
-                MacPrint.Orientation.ReverseLandscape => "-o orientation-requested=5"
+                MacPrint.Orientation.ReverseLandscape => "-o orientation-requested=5",
+                _ => throw new NotSupportedException(nameof(_orientation))
             };
             argsList.Add(orientationArg);
         }
@@ -238,7 +238,8 @@ public class MacPrintCommand : IPrintCommand
                     MediaSize.Legal => "Legal",
                     MediaSize.A4 => "A4",
                     MediaSize.COM10 => "COM10",
-                    MediaSize.DL => "DL"
+                    MediaSize.DL => "DL",
+                    _ => throw new NotSupportedException(nameof(_mediaSize)),
                 };
                 values.Add(mediaSize);
             }
@@ -253,7 +254,8 @@ public class MacPrintCommand : IPrintCommand
                     LengthUnit.Point => "",
                     LengthUnit.Inch => "in",
                     LengthUnit.Centimeter => "cm",
-                    LengthUnit.Millimeter => "mm"
+                    LengthUnit.Millimeter => "mm",
+                    _ => throw new NotSupportedException(nameof(_unit))
                 };
                 values.Add($"Custom.{_width:N3}{_height:N3}{unit}");
             }
@@ -294,7 +296,11 @@ public class MacPrintCommand : IPrintCommand
             var list = new List<string>();
             while (!p.StandardOutput.EndOfStream)
             {
-                string line = p.StandardOutput.ReadLine();
+                var line = p.StandardOutput.ReadLine();
+                if (line is null)
+                {
+                    continue;
+                }
                 var match = Regex.Match(line, @"printer\s(\w*)");
                 list.Add(match.Groups[1].ToString());
             }

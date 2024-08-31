@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using RTProClientToolsMac.Models;
 using RTProClientToolsMac.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace RTProClientToolsMac.Controllers;
 
@@ -15,6 +15,7 @@ public class PrintController(
     [RequestSizeLimit(209715200)]
     public async Task<IActionResult> PrintText([FromBody] TextPrint model)
     {
+        throw new NotImplementedException();
         await printService.PrintAsync(model);
         return Ok();
     }

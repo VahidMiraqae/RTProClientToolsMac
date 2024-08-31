@@ -4,10 +4,10 @@ using RTProClientToolsMac.Services;
 
 internal class Program
 {
-    private static IConfiguration Configuration;
-    private static Configurations Configs;
-    private static PrintFileResolver PrintFileResolver;
-    private static PrintService PrintService;
+    private static IConfiguration Configuration = null!;
+    private static Configurations Configs = null!;
+    private static PrintFileResolver PrintFileResolver = null!;
+    private static PrintService PrintService = null!;
 
     private async static Task Main(string[] args)
     {
@@ -73,7 +73,7 @@ internal class Program
 
     private static void MakeConfiguration()
     {
-        var inMemorySettings = new Dictionary<string, string> {
+        var inMemorySettings = new Dictionary<string, string?> {
             {"CopyPrintPath", ""},
             //{"SectionName:SomeKey", "SectionValue"},
         };

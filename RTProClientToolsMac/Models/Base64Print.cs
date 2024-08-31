@@ -5,7 +5,7 @@ namespace RTProClientToolsMac.Models;
 public class Base64Print :
     IPrintFilePath
 {
-    public string Base64String { get; set; }
+    public string? Base64String { get; set; }
     public string? PrinterName { get; set; }
     public string? PrintFileName { get; set; }
     public string? DocumentName { get; set; }
