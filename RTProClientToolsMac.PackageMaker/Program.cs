@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 
-namespace RTProRTProClientToolsMac.PackageMaker;
+namespace RTProClientToolsMac.PackageMaker;
 
 internal class Program
 {
+    private static HashSet<string> _nonTextFileExtensions = [".png"];
+
     private static void Main(string[] args)
     {
-        var productName = nameof(RTProRTProClientToolsMac);
+        var productName = nameof(RTProClientToolsMac);
         var version = "1.0.0";
 
         var projectDir1 = @"..\..\..\..\RTProClientToolsMac";
@@ -31,11 +33,20 @@ internal class Program
         var s = Path.Combine(currentDir, "installer", "macOS-x64", "darwin");
         foreach (var file in Directory.GetFiles(s, "*", SearchOption.AllDirectories))
         {
+            var extension = Path.GetExtension(file);
+            if (_nonTextFileExtensions.Contains(extension))
+            {
+                continue;
+            }
             var content = File.ReadAllText(file);
             var content1 = content.Replace("__PRODUCT__", productName)
                 .Replace("__VERSION__", version);
             File.WriteAllText(file, content1);
         }
+
+        var path = Path.Combine("installer", "macOS-x64", "build-macos-x64.sh");
+        Process.Start("bash", path).WaitForExit();
+
         Console.ReadLine();
     }
 
