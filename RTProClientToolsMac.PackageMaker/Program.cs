@@ -18,20 +18,14 @@ internal class Program
         var productName = nameof(RTProClientToolsMac);
         var version = "1.0.0";
 
-        var projectDir = $@"/Users/imac/Desktop/ClientToolsMac/RTProClientToolsMac";
+        var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+        var projectDir = Path.GetFullPath(Path.Combine(currentDir, "../../../../RTProClientToolsMac"));
         if (!Directory.Exists(projectDir)){
             throw new DirectoryNotFoundException();
         }
-        var currentDir = AppDomain.CurrentDomain.BaseDirectory;
 
         // publish
         var applicationDir = Path.Combine(currentDir, INSTALLER_DIR, MACOS_X64_DIR, APP_DIR);
-        // var commands = new List<string>()
-        // {
-        //     $"cd {projectDir}",
-        //     $"dotnet publish -o {applicationDir}"
-        // };
-        // var ars = string.Join(" & ", commands);
         var process = new Process() {
             StartInfo = new ProcessStartInfo(){
                 WorkingDirectory = projectDir,
@@ -41,7 +35,6 @@ internal class Program
         };
         process.Start();
         process.WaitForExit();
-        // Process.Start("bash", "/C " + ars).WaitForExit();
 
         // replace product and version
         var s = Path.Combine(currentDir, INSTALLER_DIR, MACOS_X64_DIR, DARWIN_DIR);
@@ -62,7 +55,7 @@ internal class Program
         var path = Path.Combine(currentDir, INSTALLER_DIR, MACOS_X64_DIR, PACKAGE_BUILDER_BASH);
         Process.Start("bash", $"{path} {productName} {version}").WaitForExit();
 
-        //Console.WriteLine("package was created in installer/macOS-x64/target");
-        //Console.ReadLine();
+        Console.WriteLine("package was created in installer/macOS-x64/target/pkg");
+        Console.ReadLine();
     }
 }
