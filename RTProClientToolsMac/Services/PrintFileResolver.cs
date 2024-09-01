@@ -47,6 +47,7 @@ public class PrintFileResolver
         }
         finally
         {
+            await Task.Delay(10000);
             DeleteFile(absolutePath);
         }
     }
@@ -65,7 +66,7 @@ public class PrintFileResolver
             {
                 return;
             }
-            var filesCountInDirectory = Directory.GetFiles(filePath).Length;
+            var filesCountInDirectory = Directory.GetFiles(directory).Length;
             if (filesCountInDirectory == 1 && !directory.Equals(_configurations.TempDirectory))
             {
                 Directory.Delete(directory, true);

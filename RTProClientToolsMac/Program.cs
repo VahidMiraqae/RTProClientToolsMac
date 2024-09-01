@@ -3,7 +3,7 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Error()
-            .WriteTo.File("logs/errors/errors.txt", rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(30), outputTemplate: "{NewLine}__$__{NewLine}{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.File($"{nameof(RTProClientToolsMac)}/logs/errors/errors.txt", rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(30), outputTemplate: "{NewLine}__$__{NewLine}{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
             .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);

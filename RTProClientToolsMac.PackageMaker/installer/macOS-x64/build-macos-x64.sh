@@ -165,6 +165,10 @@ function createUninstaller(){
     sed -i '' -e "s/__PRODUCT__/${PRODUCT}/g" "${TARGET_DIRECTORY}/darwinpkg/Library/${PRODUCT}/${VERSION}/uninstall.sh"
 }
 
+function createRunner(){
+    cp "$SCRIPTPATH/darwin/Resources/run.sh" "${TARGET_DIRECTORY}/darwinpkg/Library/${PRODUCT}/${VERSION}"
+}
+
 #Pre-requisites
 command -v mvn -v >/dev/null 2>&1 || {
     log_warn "Apache Maven was not found. Please install Maven first."
@@ -181,6 +185,7 @@ log_info "Installer generating process started."
 copyDarwinDirectory
 copyBuildDirectory
 createUninstaller
+createRunner
 createInstaller
 
 log_info "Installer generating process finished"

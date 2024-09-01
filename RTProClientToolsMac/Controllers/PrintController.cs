@@ -15,7 +15,6 @@ public class PrintController(
     [RequestSizeLimit(209715200)]
     public async Task<IActionResult> PrintText([FromBody] TextPrint model)
     {
-        throw new NotImplementedException();
         await printService.PrintAsync(model);
         return Ok();
     }

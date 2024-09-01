@@ -9,7 +9,7 @@ public class Configurations(IConfiguration configuration)
     {
         get
         {
-            var tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FILES_TEMP_FOLDER_NAME);
+            var tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), nameof(RTProClientToolsMac), FILES_TEMP_FOLDER_NAME);
             Directory.CreateDirectory(tempPath);
             return tempPath;
         }

@@ -19,8 +19,7 @@ rm -f /usr/local/bin/__PRODUCT__-__VERSION__
 ln -s ${PRODUCT_HOME}/${APPLICATION_FILE_PATH} /usr/local/bin/__PRODUCT__-__VERSION__
 echo "Post installation process finished"
 
-/usr/bin/osascript -e "tell application \"System Events\" to make new login item with properties { path: \"/Library/__PRODUCT__/__VERSION__/__PRODUCT__\", hidden:false } at end"
+#/usr/bin/osascript -e "tell application \"System Events\" to make new login item with properties { path: \"/Library/__PRODUCT__/__VERSION__/__PRODUCT__\", hidden:false } at end"
 
-osascript -e 'tell app "Terminal"
-    do script "/Library/__PRODUCT__/__VERSION__/__PRODUCT__"
-end tell'
+cd /Library/__PRODUCT__/__VERSION__
+ls

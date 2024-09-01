@@ -29,6 +29,9 @@
     <None Update="installer\macOS-x64\darwin\Resources\uninstall.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="installer\macOS-x64\darwin\Resources\run.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="installer\macOS-x64\darwin\Resources\welcome.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
