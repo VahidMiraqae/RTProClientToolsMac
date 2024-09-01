@@ -18,8 +18,8 @@ function printUsage() {
   echo -e "\033[1mOptions:\033[0m"
   echo "  -h (--help)"
   echo
-  echo -e "\033[1mExample::\033[0m"
-  echo "$0 wso2am 2.6.0"
+  #echo -e "\033[1mExample::\033[0m"
+  #echo "$0 wso2am 2.6.0"
 
 }
 
