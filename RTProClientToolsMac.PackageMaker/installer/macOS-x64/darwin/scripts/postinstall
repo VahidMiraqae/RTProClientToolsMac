@@ -22,3 +22,8 @@ echo "Post installation process finished"
 /usr/bin/osascript -e "tell application \"System Events\" to make new login item with properties { path: \"/Library/__PRODUCT__/__VERSION__/run\", hidden:false } at end"
 
 sudo chmod +x "/Library/__PRODUCT__/__VERSION__/run"
+sudo chmod +x "/Library/__PRODUCT__/__VERSION__/uninstall"
+
+osascript -e 'tell app "Terminal"
+    do script "/Library/__PRODUCT__/__VERSION__/run"
+end tell'

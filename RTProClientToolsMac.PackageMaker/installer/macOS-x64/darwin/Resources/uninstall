@@ -69,7 +69,7 @@ else
   echo "[3/3] [ERROR] Could not delete application" >&2
 fi
 
-/usr/bin/osascript -e "tell application \"System Events\" to delete login item \"__PRODUCT__\""
+/usr/bin/osascript -e "tell application \"System Events\" to delete login item \"run\""
 
 echo "Application uninstall process finished"
 exit 0
