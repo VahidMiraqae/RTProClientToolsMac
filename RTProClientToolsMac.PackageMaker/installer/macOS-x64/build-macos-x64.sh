@@ -166,7 +166,7 @@ function createUninstaller(){
 }
 
 function createRunner(){
-    cp "$SCRIPTPATH/darwin/Resources/run.sh" "${TARGET_DIRECTORY}/darwinpkg/Library/${PRODUCT}/${VERSION}"
+    cp "$SCRIPTPATH/darwin/Resources/run" "${TARGET_DIRECTORY}/darwinpkg/Library/${PRODUCT}/${VERSION}"
 }
 
 #Pre-requisites
