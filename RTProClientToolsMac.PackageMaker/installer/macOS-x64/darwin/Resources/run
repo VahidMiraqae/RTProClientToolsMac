@@ -1,4 +1,33 @@
 #!/bin/bash
 
+port1=5991;
+port2=5992;
+port3=5993;
+port4=5994;
+
+for i in {1..4}
+do
+    while : ;
+    do
+        jj=$((port$i))
+        xxx=`lsof -i:$jj`
+        # echo ${#xxx}
+        if [ ${#xxx} -eq 0 ]; then
+            break
+        fi
+        (("port$i"="port$i"+1000))
+    done
+done
+
+urls=""
+theip=`ipconfig getifaddr en0`
+if [ ! -z $theip ]; then
+    urls="http://$theip:$port1;https://$theip:$port2;"
+fi
+theip=`ipconfig getifaddr en1`
+if [ ! -z $theip ]; then
+    urls="${urls}http://$theip:$port3;https://$theip:$port4;"
+fi
+
 cd "$(dirname "$0")"
-dotnet RTProClientToolsMac.dll
+dotnet RTProClientToolsMac.dll --urls $urls

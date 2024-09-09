@@ -8,15 +8,6 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (!builder.Environment.IsDevelopment())
-{
-    var template = "{0}://localhost:{1}";
-    var port = builder.Configuration.GetSection("Port").Get<int>();
-    var useHttps = builder.Configuration.GetSection("UseHttps").Get<bool>();
-    var url = string.Format(template, useHttps ? "https" : "http", port is >= 49152 and <= 65535 ? port : 52345);
-    builder.WebHost.UseUrls(url);
-}
-
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
